@@ -99,7 +99,7 @@ public class SQLInquirer implements DatabaseInterface {
     {
         try{
             Class.forName("org.mariadb.jdbc.Driver"); //cast class
-            connector =  DriverManager.getConnection("jdbc:mariadb://161.246.70.77/MoveAlarm" +
+            connector =  DriverManager.getConnection("jdbc:mariadb://13.76.94.234/MoveAlarm" +
                     "?user=MoveAlarmServer&password=pepayoo!&charesultSetet=utf-8"); //database server connection
 
             if(connector != null){ //if connector can connect to database server
