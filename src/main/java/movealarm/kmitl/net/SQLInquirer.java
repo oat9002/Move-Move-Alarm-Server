@@ -32,6 +32,7 @@ public class SQLInquirer implements DatabaseInterface {
     public ArrayList<HashMap<String, Object>> query(String sqlCommand) throws SQLException {
         ArrayList<HashMap<String, Object>> collection = new ArrayList<HashMap<String, Object>>(); //create ArrayList to keep the data
 
+        startConnection();
         resultSet = statement.executeQuery(sqlCommand); //query data and keep to resultSet
         ResultSetMetaData metaData = resultSet.getMetaData(); //get meta data of query results such as column name, data type
         while(resultSet.next()) {
@@ -66,10 +67,12 @@ public class SQLInquirer implements DatabaseInterface {
     }
 
     public void update(String tableName, String valueSet, String columnName, String operator, String value) throws SQLException { //update or edit data
+        startConnection();
         statement.executeUpdate("UPDATE " + tableName + " SET " + valueSet + " WHERE " + columnName + " " + operator + " " + value);
     }
 
     public HashMap<String, Object> insert(String tableName, String columnNamesSet, String values) throws SQLException {
+        startConnection();
         statement.executeUpdate("INSERT INTO " + tableName + " ( " + columnNamesSet + " ) VALUES (" + values + " )");
         resultSet = statement.getGeneratedKeys();
         resultSet.next();
@@ -88,10 +91,12 @@ public class SQLInquirer implements DatabaseInterface {
             if(i != valuesSet.length - 1)
                 values += ", ";
         }
+        startConnection();
         statement.executeUpdate("INSERT INTO " + tableName + " ( " + columnNamesSet + " ) VALUES " + values);
     }
 
     public void delete(String tableName, String conditions) throws SQLException {
+        startConnection();
         statement.executeUpdate("DELETE FROM " + tableName + " WHERE " + conditions);
     }
 
@@ -100,7 +105,7 @@ public class SQLInquirer implements DatabaseInterface {
         try{
             Class.forName("org.mariadb.jdbc.Driver"); //cast class
             connector =  DriverManager.getConnection("jdbc:mariadb://13.76.94.234/MoveAlarm" +
-                    "?user=MoveAlarmServer&password=pepayoo!&charesultSetet=utf-8&connectTimeout=0"); //database server connection
+                    "?user=MoveAlarmServer&password=pepayoo!&charesultSetet=utf-8"); //database server connection
 
             if(connector != null){ //if connector can connect to database server
                 statement = connector.createStatement(); //create statement to use to query data
