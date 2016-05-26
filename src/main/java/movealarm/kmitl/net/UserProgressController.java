@@ -23,7 +23,7 @@ public class UserProgressController {
 
         User user = User.find(converter.toInt(data.get("id")));
         if(user == null)
-            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist."));
+            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist.rata"));
 
         ArrayList<HashMap<String, Object>> queryData;
         try {
