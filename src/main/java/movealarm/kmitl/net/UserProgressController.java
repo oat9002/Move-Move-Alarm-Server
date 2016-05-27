@@ -16,7 +16,7 @@ public class UserProgressController {
     private Converter converter = Converter.getInstance();
     private DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
 
-    @RequestMapping("/userProgress/getAllUserLogs")
+    /*@RequestMapping("/userProgress/getAllUserLogs")
     public String getAllLog(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
         HashMap<String, Object> data = converter.JSONToHashMap(JSON);
@@ -79,7 +79,7 @@ public class UserProgressController {
         response.put("logs", logs);
 
         return converter.HashMapToJSON(response);
-    }
+    }*/
 
     @RequestMapping("/userProgress/getByUser")
     public String getByUser(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
@@ -91,7 +91,7 @@ public class UserProgressController {
         if(user == null)
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "user does not exist."));
 
-        UserActivityProgress progress = UserActivityProgress.findByUser(user);
+        UserActivityProgress progress = UserActivityProgress.findByUser(user, converter.toInt(data.get("type")));
         if(progress == null)
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "No user activity progress."));
 
@@ -112,21 +112,30 @@ public class UserProgressController {
         if(user == null)
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "user does not exist."));
 
-        UserActivityProgress progress = UserActivityProgress.findByUser(user);
+        //type = 0 => day
+        UserActivityProgress progress = UserActivityProgress.findByUser(user,0);
         if(progress == null) {
-            progress = new UserActivityProgress();
+            progress = new UserActivityProgress(0);
             progress.setUser(user);
         }
 
         progress.setNumberOfAccept(converter.toInt(progressData.get("numberOfAccept")));
-        progress.setCancelActivity(converter.toInt(progressData.get("cancelActivity")));
+        progress.setTotalExerciseTime(converter.toDouble(progressData.get("totalExerciseTime")));
+        progress.setTotalActivity(converter.toInt(progressData.get("totalActivity")));
+        progress.setNeck(converter.toInt(progressData.get("neck")));
+        progress.setShoulder(converter.toInt(progressData.get("shoulder")));
+        progress.setChest_back(converter.toInt(progressData.get("chest_back")));
+        progress.setWrist(converter.toInt(progressData.get("wrist")));
+        progress.setWaist(converter.toInt(progressData.get("waist")));
+        progress.setHip_leg_calf(converter.toInt(progressData.get("hip_keg_calf")));
+        //progress.setCancelActivity(converter.toInt(progressData.get("cancelActivity")));
 
-        try {
+        /*try {
             progress.setDate((Date) progressData.get("date"));
             progress.setNumberOfCancel(converter.toInt(progressData.get("numberOfCancel")));
         } catch (Exception e) {
 
-        }
+        }*/
 
         return converter.HashMapToJSON(progress.save());
     }

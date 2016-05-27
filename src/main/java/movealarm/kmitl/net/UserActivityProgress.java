@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Calendar;
 
 public class UserActivityProgress extends Model {
 
@@ -17,14 +18,17 @@ public class UserActivityProgress extends Model {
     private int waist = 0;
     private int hip_leg_calf = 0;
     private User user;
+    private int type = -1;
 
     //type = 0 => day, type = 1 => week
     public UserActivityProgress(int type) {
         if(type == 0) {
             this.tableName = "userActivity_progress_day";
+            this.type = 0;
         }
         else if(type == 1) {
             this.tableName = "userActivity_progress_week";
+            this.type = 1;
         }
         else {
             System.out.println("Type is not correct.");
@@ -105,6 +109,56 @@ public class UserActivityProgress extends Model {
         temp.put("userID", user.getID());
 
         return temp;
+    }
+
+    @Override
+    public HashMap<String, Object> save() //save all progresses
+    {
+        HashMap<String, Object> requiredFields = checkRequiredFields(); //check if some required fields still not filled
+        if(requiredFields != null)
+            return requiredFields; //return name of need required fields
+
+        if(createdDate == null) { //if this model has never been saved before
+            HashMap<String, Object> temp = modelCollection.create(this); //create row on the database first and receive id, created date
+            this.setType(1);
+            modelCollection.create(this);
+            if(temp == null) //if an error has occurred while inserting data to the database
+                return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
+
+            id = Integer.parseInt("" + temp.get("id")); //set id and created date of this model
+            createdDate = (Date) temp.get("created_date");
+            return StatusDescription.createProcessStatus(true); //return new model
+        }
+
+        Calendar createdDate_temp = Calendar.getInstance();
+        createdDate_temp.setTime(getCreatedDate());
+        Calendar today = Calendar.getInstance();
+        int diff = today.DATE - createdDate_temp.DATE;
+        if(diff == 0) {
+
+        }
+
+        return StatusDescription.createProcessStatus(modelCollection.save(this)); //return saving status if all required process are complete
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        if(type == 0) {
+            this.type = type;
+            this.tableName = "userActivity_progress_day";
+        }
+        else if(type == 1) {
+            this.type = type;
+            this.tableName = "userActivity_progress_day";
+        }
+        else {
+            this.type = -1;
+            this.tableName = "";
+            System.out.println("Invalid type;");
+        }
     }
 
     public double getTotalExerciseTime() {
