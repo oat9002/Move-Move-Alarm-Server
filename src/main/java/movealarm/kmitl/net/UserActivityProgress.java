@@ -121,8 +121,8 @@ public class UserActivityProgress extends Model {
         if(createdDate == null) { //if this model has never been saved before
             HashMap<String, Object> temp = modelCollection.create(this); //create row on the database first and receive id, created date
             this.setType(1);
-            modelCollection.create(this);
-            if(temp == null) //if an error has occurred while inserting data to the database
+            HashMap<String, Object> temp2 = modelCollection.create(this);
+            if(temp == null || temp2 == null) //if an error has occurred while inserting data to the database
                 return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
 
             id = Integer.parseInt("" + temp.get("id")); //set id and created date of this model
@@ -133,9 +133,73 @@ public class UserActivityProgress extends Model {
         Calendar createdDate_temp = Calendar.getInstance();
         createdDate_temp.setTime(getCreatedDate());
         Calendar today = Calendar.getInstance();
-        int diff = today.DATE - createdDate_temp.DATE;
-        if(diff == 0) {
+        if(today.YEAR == createdDate_temp.YEAR) {
+            if(today.WEEK_OF_YEAR == createdDate_temp.WEEK_OF_YEAR) {
+                if(today.DATE == createdDate_temp.DATE) {
+                    UserActivityProgress progress = UserActivityProgress.findByUser(getUser(),0);
+                    setType(0);
+                    setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
+                    setTotalActivity(getTotalActivity() + progress.getTotalActivity());
+                    setNumberOfAccept(getNumberOfAccept() + progress.getNumberOfAccept());
+                    setNeck(getNeck() + progress.getNeck());
+                    setShoulder(getShoulder() + progress.getShoulder());
+                    setChest_back(getChest_back() + progress.getChest_back());
+                    setWrist(getWrist() + progress.getWrist());
+                    setWaist(getWaist() + progress.getWaist());
+                    setHip_leg_calf(getHip_leg_calf() + progress.getHip_leg_calf());
+                    HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.save(this));
+                    progress = UserActivityProgress.findByUser(getUser(),1);
+                    setType(1);
+                    setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
+                    setTotalActivity(getTotalActivity() + progress.getTotalActivity());
+                    setNumberOfAccept(getNumberOfAccept() + progress.getNumberOfAccept());
+                    setNeck(getNeck() + progress.getNeck());
+                    setShoulder(getShoulder() + progress.getShoulder());
+                    setChest_back(getChest_back() + progress.getChest_back());
+                    setWrist(getWrist() + progress.getWrist());
+                    setWaist(getWaist() + progress.getWaist());
+                    setHip_leg_calf(getHip_leg_calf() + progress.getHip_leg_calf());
+                    status.put("status_week", modelCollection.save(this));
+                    return status;
+                }
+                else {
+                    UserActivityProgress progress = UserActivityProgress.findByUser(getUser(),0);
+                    HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.delete(progress));
+                    setType(0);
+                    HashMap<String, Object> temp = modelCollection.create(this);
+                    if(temp == null) //if an error has occurred while inserting data to the database
+                        return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
+                    progress = UserActivityProgress.findByUser(getUser(),1);
+                    setType(1);
+                    setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
+                    setTotalActivity(getTotalActivity() + progress.getTotalActivity());
+                    setNumberOfAccept(getNumberOfAccept() + progress.getNumberOfAccept());
+                    setNeck(getNeck() + progress.getNeck());
+                    setShoulder(getShoulder() + progress.getShoulder());
+                    setChest_back(getChest_back() + progress.getChest_back());
+                    setWrist(getWrist() + progress.getWrist());
+                    setWaist(getWaist() + progress.getWaist());
+                    setHip_leg_calf(getHip_leg_calf() + progress.getHip_leg_calf());
+                    status.put("status_save",modelCollection.save(this));
+                    return status;
+                }
+            }
+            else {
+                UserActivityProgress progress = UserActivityProgress.findByUser(getUser(), 0);
+                HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.delete(progress));
+                progress = UserActivityProgress.findByUser(getUser(), 1);
+                status.put("status_delete week", modelCollection.delete(progress));
+                HashMap<String, Object> temp = modelCollection.create(this); //create row on the database first and receive id, created date
+                this.setType(1);
+                HashMap<String, Object> temp2 = modelCollection.create(this);
+                if(temp == null || temp2 == null) //if an error has occurred while inserting data to the database
+                    return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
 
+                id = Integer.parseInt("" + temp.get("id")); //set id and created date of this model
+                createdDate = (Date) temp.get("created_date");
+                status.put("status_create", true);
+                return status; //return new model
+            }
         }
 
         return StatusDescription.createProcessStatus(modelCollection.save(this)); //return saving status if all required process are complete
