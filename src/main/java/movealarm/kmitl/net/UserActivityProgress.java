@@ -227,6 +227,7 @@ public class UserActivityProgress extends Model {
 
     public void setTotalExerciseTime(double totalExerciseTime) {
         this.totalExerciseTime = totalExerciseTime;
+        updateModifiedDate();
     }
 
     public int getNumberOfAccept() {
@@ -235,6 +236,7 @@ public class UserActivityProgress extends Model {
 
     public void setNumberOfAccept(int numberOfAccept) {
         this.numberOfAccept = numberOfAccept;
+        updateModifiedDate();
     }
 
     public int getTotalActivity() {
@@ -243,6 +245,7 @@ public class UserActivityProgress extends Model {
 
     public void setTotalActivity(int totalActivity) {
         this.totalActivity = totalActivity;
+        updateModifiedDate();
     }
 
     public int getNeck() {
@@ -251,6 +254,7 @@ public class UserActivityProgress extends Model {
 
     public void setNeck(int neck) {
         this.neck = neck;
+        updateModifiedDate();
     }
 
     public int getShoulder() {
@@ -259,6 +263,7 @@ public class UserActivityProgress extends Model {
 
     public void setShoulder(int shoulder) {
         this.shoulder = shoulder;
+        updateModifiedDate();
     }
 
     public int getChest_back() {
@@ -267,6 +272,7 @@ public class UserActivityProgress extends Model {
 
     public void setChest_back(int chest_back) {
         this.chest_back = chest_back;
+        updateModifiedDate();
     }
 
     public int getWrist() {
@@ -275,6 +281,7 @@ public class UserActivityProgress extends Model {
 
     public void setWrist(int wrist) {
         this.wrist = wrist;
+        updateModifiedDate();
     }
 
     public int getWaist() {
@@ -283,6 +290,7 @@ public class UserActivityProgress extends Model {
 
     public void setWaist(int waist) {
         this.waist = waist;
+        updateModifiedDate();
     }
 
     public int getHip_leg_calf() {
@@ -291,6 +299,7 @@ public class UserActivityProgress extends Model {
 
     public void setHip_leg_calf(int hip_leg_calf) {
         this.hip_leg_calf = hip_leg_calf;
+        updateModifiedDate();
     }
 
     public User getUser() {
@@ -299,6 +308,7 @@ public class UserActivityProgress extends Model {
 
     public void setUser(User user) {
         this.user = user;
+        updateModifiedDate();
     }
 
     public Date getCreatedDate() {
@@ -307,6 +317,7 @@ public class UserActivityProgress extends Model {
 
     public void setCreatedDate(Date date) {
         this.createdDate = date;
+        updateModifiedDate();
     }
 
     public Date getModifiedDate() {
@@ -315,10 +326,12 @@ public class UserActivityProgress extends Model {
 
     public void setModidiedDate(Date date) {
         this.modifiedDate = date;
+        updateModifiedDate();
     }
 
     public void setID(int id) {
         this.id = id;
+        updateModifiedDate();
     }
 }
 
