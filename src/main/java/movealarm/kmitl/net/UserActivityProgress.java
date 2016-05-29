@@ -56,6 +56,7 @@ public class UserActivityProgress extends Model {
         HashMap<String, Object> model = data.get(0);
 
         UserActivityProgress progress = new UserActivityProgress(type);
+        progress.setID(converter.toInt(model.get("id")));
         progress.setTotalExerciseTime(converter.toDouble(model.get("totalExerciseTime")));
         progress.setTotalActivity(converter.toInt(model.get("totalActivity")));
         progress.setNumberOfAccept(converter.toInt(model.get("numberOfAccept")));
@@ -66,7 +67,8 @@ public class UserActivityProgress extends Model {
         progress.setWaist(converter.toInt(model.get("waist")));
         progress.setHip_leg_calf(converter.toInt(model.get("hip_leg_calf")));
         progress.setUser(user);
-
+        progress.setCreatedDate((Date)model.get("createdDate"));
+        progress.setModidiedDate((Date)model.get("modifiedDate"));
         return progress;
     }
 
@@ -117,8 +119,8 @@ public class UserActivityProgress extends Model {
         HashMap<String, Object> requiredFields = checkRequiredFields(); //check if some required fields still not filled
         if(requiredFields != null)
             return requiredFields; //return name of need required fields
-
-        if(createdDate == null) { //if this model has never been saved before
+        UserActivityProgress progress_check = UserActivityProgress.findByUser(getUser(),0);
+        if(progress_check == null) { //if this model has never been saved before
             HashMap<String, Object> temp = modelCollection.create(this); //create row on the database first and receive id, created date
             this.setType(1);
             HashMap<String, Object> temp2 = modelCollection.create(this);
@@ -129,15 +131,15 @@ public class UserActivityProgress extends Model {
             createdDate = (Date) temp.get("created_date");
             return StatusDescription.createProcessStatus(true); //return new model
         }
-
         Calendar createdDate_temp = Calendar.getInstance();
-        createdDate_temp.setTime(getCreatedDate());
+        createdDate_temp.setTime(progress_check.getCreatedDate());
         Calendar today = Calendar.getInstance();
         if(today.YEAR == createdDate_temp.YEAR) {
             if(today.WEEK_OF_YEAR == createdDate_temp.WEEK_OF_YEAR) {
                 if(today.DATE == createdDate_temp.DATE) {
                     UserActivityProgress progress = UserActivityProgress.findByUser(getUser(),0);
                     setType(0);
+                    setID(progress.getID());
                     setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
                     setTotalActivity(getTotalActivity() + progress.getTotalActivity());
                     setNumberOfAccept(getNumberOfAccept() + progress.getNumberOfAccept());
@@ -150,15 +152,7 @@ public class UserActivityProgress extends Model {
                     HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.save(this));
                     progress = UserActivityProgress.findByUser(getUser(),1);
                     setType(1);
-                    setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
-                    setTotalActivity(getTotalActivity() + progress.getTotalActivity());
-                    setNumberOfAccept(getNumberOfAccept() + progress.getNumberOfAccept());
-                    setNeck(getNeck() + progress.getNeck());
-                    setShoulder(getShoulder() + progress.getShoulder());
-                    setChest_back(getChest_back() + progress.getChest_back());
-                    setWrist(getWrist() + progress.getWrist());
-                    setWaist(getWaist() + progress.getWaist());
-                    setHip_leg_calf(getHip_leg_calf() + progress.getHip_leg_calf());
+                    setID(progress.getID());
                     status.put("status_week", modelCollection.save(this));
                     return status;
                 }
@@ -166,11 +160,13 @@ public class UserActivityProgress extends Model {
                     UserActivityProgress progress = UserActivityProgress.findByUser(getUser(),0);
                     HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.delete(progress));
                     setType(0);
+                    setID(progress.getID());
                     HashMap<String, Object> temp = modelCollection.create(this);
                     if(temp == null) //if an error has occurred while inserting data to the database
                         return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
                     progress = UserActivityProgress.findByUser(getUser(),1);
                     setType(1);
+                    setID(progress.getID());
                     setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
                     setTotalActivity(getTotalActivity() + progress.getTotalActivity());
                     setNumberOfAccept(getNumberOfAccept() + progress.getNumberOfAccept());
@@ -216,7 +212,7 @@ public class UserActivityProgress extends Model {
         }
         else if(type == 1) {
             this.type = type;
-            this.tableName = "userActivity_progress_day";
+            this.tableName = "userActivity_progress_week";
         }
         else {
             this.type = -1;
@@ -303,6 +299,26 @@ public class UserActivityProgress extends Model {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date date) {
+        this.createdDate = date;
+    }
+
+    public Date getModifiedDate() {
+        return this.modifiedDate;
+    }
+
+    public void setModidiedDate(Date date) {
+        this.modifiedDate = date;
+    }
+
+    public void setID(int id) {
+        this.id = id;
     }
 }
 
