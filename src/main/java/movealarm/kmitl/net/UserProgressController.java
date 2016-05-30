@@ -16,7 +16,7 @@ public class UserProgressController {
     private Converter converter = Converter.getInstance();
     private DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
 
-    /*@RequestMapping("/userProgress/getAllUserLogs")
+    @RequestMapping("/userProgress/getAllUserLogs")
     public String getAllLog(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
         HashMap<String, Object> data = converter.JSONToHashMap(JSON);
@@ -79,7 +79,7 @@ public class UserProgressController {
         response.put("logs", logs);
 
         return converter.HashMapToJSON(response);
-    }*/
+    }
 
     @RequestMapping("/userProgress/getByUser")
     public String getByUser(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)

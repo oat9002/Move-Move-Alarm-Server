@@ -118,15 +118,21 @@ public class GroupProgressController {
             progress.setGroup(group);
         }
 
-        progress.increaseAcceptTime(converter.toInt(progressData.get("numberOfAccept")));
-        progress.increaseCancelTime(converter.toInt(progressData.get("cancelActivity")));
-
-        try {
+        progress.setNumberOfAccept(converter.toInt(progressData.get("numberOfAccept")));
+        progress.setTotalExerciseTime(converter.toDouble(progressData.get("totalExerciseTime")));
+        progress.setTotalActivity(converter.toInt(progressData.get("totalActivity")));
+        progress.setNeck(converter.toInt(progressData.get("neck")));
+        progress.setShoulder(converter.toInt(progressData.get("shoulder")));
+        progress.setChest_back(converter.toInt(progressData.get("chest_back")));
+        progress.setWrist(converter.toInt(progressData.get("wrist")));
+        progress.setWaist(converter.toInt(progressData.get("waist")));
+        progress.setHip_leg_calf(converter.toInt(progressData.get("hip_keg_calf")));
+       /* try {
             progress.setDate((Date) progressData.get("date"));
             progress.setNumberOfCancel(converter.toInt(progressData.get("numberOfCancel")));
         } catch (Exception e) {
 
-        }
+        }*/
 
         return converter.HashMapToJSON(progress.save());
     }

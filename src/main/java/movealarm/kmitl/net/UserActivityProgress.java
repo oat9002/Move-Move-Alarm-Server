@@ -136,7 +136,8 @@ public class UserActivityProgress extends Model {
         Calendar today = Calendar.getInstance();
         if(today.YEAR == createdDate_temp.YEAR) {
             if(today.WEEK_OF_YEAR == createdDate_temp.WEEK_OF_YEAR) {
-                if(today.DATE == createdDate_temp.DATE) {
+                if(today.DATE == createdDate_temp.DATE) {  //save to db in the same day
+		    //set all stuff
                     UserActivityProgress progress = UserActivityProgress.findByUser(getUser(),0);
                     setType(0);
                     setID(progress.getID());
@@ -156,7 +157,7 @@ public class UserActivityProgress extends Model {
                     status.put("status_week", modelCollection.save(this));
                     return status;
                 }
-                else {
+                else { //save to db different day(Have to delete old row and create new one. Delete only row in day's table.)
                     UserActivityProgress progress = UserActivityProgress.findByUser(getUser(),0);
                     HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.delete(progress));
                     setType(0);
@@ -165,6 +166,7 @@ public class UserActivityProgress extends Model {
                     if(temp == null) //if an error has occurred while inserting data to the database
                         return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
                     progress = UserActivityProgress.findByUser(getUser(),1);
+		    //set all stuff
                     setType(1);
                     setID(progress.getID());
                     setTotalExerciseTime(getTotalExerciseTime() + progress.getTotalExerciseTime());
@@ -180,25 +182,26 @@ public class UserActivityProgress extends Model {
                     return status;
                 }
             }
-            else {
-                UserActivityProgress progress = UserActivityProgress.findByUser(getUser(), 0);
-                HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.delete(progress));
-                progress = UserActivityProgress.findByUser(getUser(), 1);
-                status.put("status_delete week", modelCollection.delete(progress));
-                HashMap<String, Object> temp = modelCollection.create(this); //create row on the database first and receive id, created date
-                this.setType(1);
-                HashMap<String, Object> temp2 = modelCollection.create(this);
-                if(temp == null || temp2 == null) //if an error has occurred while inserting data to the database
-                    return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
-
-                id = Integer.parseInt("" + temp.get("id")); //set id and created date of this model
-                createdDate = (Date) temp.get("created_date");
-                status.put("status_create", true);
-                return status; //return new model
-            }
         }
+        //save to db different week or year(Have to delete old row and create a new one. Delete row in both day's and week's table.)
+        UserActivityProgress progress = UserActivityProgress.findByUser(getUser(), 0);
+        HashMap<String, Object> status = StatusDescription.createProcessStatus(modelCollection.delete(progress));
+        progress = UserActivityProgress.findByUser(getUser(), 1);
+        status.put("status_delete week", modelCollection.delete(progress));
+        HashMap<String, Object> temp = modelCollection.create(this); //create row on the database first and receive id, created date
+        this.setType(1);
+        HashMap<String, Object> temp2 = modelCollection.create(this);
+        if(temp == null || temp2 == null) //if an error has occurred while inserting data to the database
+            return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
 
-        return StatusDescription.createProcessStatus(modelCollection.save(this)); //return saving status if all required process are complete
+        id = Integer.parseInt("" + temp.get("id")); //set id and created date of this model
+
+        createdDate = (Date) temp.get("created_date");
+        status.put("status_create", true);
+        return status; //return new model
+
+
+        //return StatusDescription.createProcessStatus(modelCollection.save(this)); //return saving status if all required process are complete
     }
 
     public int getType() {
