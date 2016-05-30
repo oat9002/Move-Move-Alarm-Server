@@ -134,15 +134,21 @@ public class UserController {
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Password should not be less than 6 letters."));
         
         User user = new User();
-        user.setUsername(converter.toString(userData.get("userName")));
+        //user.setUsername(converter.toString(userData.get("userName")));
         user.setEmail(converter.toString(userData.get("email")));
-        user.setPassword(crypto.encryption(converter.toString(userData.get("password")))); //encrypt user's password
+        //user.setPassword(crypto.encryption(converter.toString(userData.get("password")))); //encrypt user's password
 
         try {
-            user.setFirstName(converter.toString(userData.get("firstName")));
-            user.setLastName(converter.toString(userData.get("lastName")));
-            user.setGender(converter.toInt(userData.get("gender")));
+            //user.setFirstName(converter.toString(userData.get("firstName")));
+            //user.setLastName(converter.toString(userData.get("lastName")));
+            //user.setGender(converter.toInt(userData.get("gender")));
+            user.setBirthday(converter.toString(userData.get("birthday")));
             user.setAge(converter.toInt(userData.get("age")));
+            user.setHeight(converter.toInt(userData.get("height")));
+            user.setWeight(converter.toInt(userData.get("weight")));
+            user.setWaistline(converter.toInt(userData.get("waistline")));
+            user.setBmi(converter.toInt(userData.get("bmi")));
+            user.setProfileImage(converter.toInt(userData.get("profileImage")));
             user.setFacebookID(converter.toString(userData.get("facebookID")));
             user.setFacebookFirstName(converter.toString(userData.get("facebookFirstName")));
             user.setFacebookLastName(converter.toString(userData.get("facebookLastName")));
@@ -173,13 +179,19 @@ public class UserController {
         user.setEmail(converter.toString(userData.get("email")));
 
         try {
-            user.setFirstName(converter.toString(userData.get("firstName")));
+            /*user.setFirstName(converter.toString(userData.get("firstName")));
             user.setLastName(converter.toString(userData.get("lastName")));
             if(converter.toString(userData.get("gender")).equals("female"))
                 user.setGender(0);
             else if(converter.toString(userData.get("gender")).equals("male"))
-                user.setGender(1);
+                user.setGender(1);*/
+            user.setBirthday(converter.toString(userData.get("birthday")));
             user.setAge(converter.toInt(userData.get("age")));
+            user.setHeight(converter.toInt(userData.get("height")));
+            user.setWeight(converter.toInt(userData.get("weight")));
+            user.setWaistline(converter.toInt(userData.get("waistline")));
+            user.setBmi(converter.toInt(userData.get("bmi")));
+            user.setProfileImage(converter.toInt(userData.get("profileImage")));
             user.setFacebookID(converter.toString(userData.get("facebookID")));
             user.setFacebookFirstName(converter.toString(userData.get("facebookFirstName")));
             user.setFacebookLastName(converter.toString(userData.get("facebookLastName")));
@@ -190,7 +202,7 @@ public class UserController {
         return converter.HashMapToJSON(user.save());
     }
 
-    @RequestMapping("/user/changePassword")
+    /*@RequestMapping("/user/changePassword")
     public String changePassword(@RequestParam(value="JSON", required = true, defaultValue = "") String JSON)
     {
         HashMap<String, Object> data = converter.JSONToHashMap(JSON); //convert to HashMap format
@@ -218,7 +230,7 @@ public class UserController {
         user.setPassword(newPassword); //put to user
 
         return converter.HashMapToJSON(user.save()); //return save process status
-    }
+    }*/
 
     @RequestMapping("/user/delete")
     public String delete(@RequestParam(value="JSON", required = true, defaultValue = "") String JSON)
@@ -297,7 +309,7 @@ public class UserController {
         return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Cannot reset score due to internal server error."));
     }
 
-    @RequestMapping("/user/login")
+    /*@RequestMapping("/user/login")
     public String login(@RequestParam(value="userName", required = true, defaultValue = "0") String userName,
                         @RequestParam(value="password", required = true, defaultValue = "0") String password)
     {
@@ -328,7 +340,7 @@ public class UserController {
             JSON.put("group", group.getGeneralValues());
 
         return converter.HashMapToJSON(JSON); //convert to JSON string
-    }
+    }*/
 
     @RequestMapping("/user/loginFacebook")
     public String loginFacebook(@RequestParam(value = "facebookID", required = true, defaultValue = "0")String facebookID,
