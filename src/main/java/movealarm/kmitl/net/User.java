@@ -9,7 +9,7 @@ import java.util.HashMap;
  * Created by Moobi on 30-Oct-15.
  */
 public class User extends Model{
-    private int idUser = 0;
+    //private int idUser = 0;
     private String birthday = null;
     private int age = 0;
     private int score = 0;
@@ -46,7 +46,7 @@ public class User extends Model{
         User model = new User(); //create model
         model.id = (int) temp.get("id"); //mapping fields process
         model.createdDate = (Date) temp.get("createdDate");
-        model.idUser = (int) temp.get("idUser");
+        //model.idUser = (int) temp.get("idUser");
         model.birthday = "" + temp.get("birthday");
         model.age = (int) temp.get("age");
         model.score = (int) temp.get("score");
@@ -70,10 +70,9 @@ public class User extends Model{
 
         for(HashMap<String, Object> item : temp) { //mapping values
             User model = new User();
-            model.id = (int) item.get("id");
             model.id = (int) item.get("id"); //mapping fields process
             model.createdDate = (Date) item.get("createdDate");
-            model.idUser = (int) item.get("idUser");
+           // model.idUser = (int) item.get("idUser");
             model.birthday = "" + item.get("birthday");
             model.age = (int) item.get("age");
             model.score = (int) item.get("score");
@@ -107,7 +106,7 @@ public class User extends Model{
             User model = new User();
             model.id = (int) item.get("id"); //mapping fields process
             model.createdDate = (Date) item.get("createdDate");
-            model.idUser = (int) item.get("idUser");
+           // model.idUser = (int) item.get("idUser");
             model.birthday = "" + item.get("birthday");
             model.age = (int) item.get("age");
             model.score = (int) item.get("score");
@@ -262,14 +261,14 @@ public class User extends Model{
         updateModifiedDate();
     }
 
-    public int getIdUser() {
+   /* public int getIdUser() {
         return idUser;
     }
 
     public void setIdUser(int idUser) {
         this.idUser = idUser;
         updateModifiedDate();
-    }
+    }*/
 
     public String getBirthday() {
         return birthday;
