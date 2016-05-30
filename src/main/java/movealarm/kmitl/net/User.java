@@ -9,19 +9,19 @@ import java.util.HashMap;
  * Created by Moobi on 30-Oct-15.
  */
 public class User extends Model{
-    private String firstName = null;
-    private String lastName = null;
-    private String userName = null;
+    private int idUser = 0;
+    private String birthday = null;
     private int age = 0;
     private int score = 0;
-    private int gender = 0;
+    private int height = 0;
+    private int weight = 0;
+    private int waistline = 0;
+    private int bmi = 0;
     private String email = null;
-    private String password = null;
     private String facebookID = null;
     private String facebookFirstName = null;
     private String facebookLastName = null;
-    private Object profileImage = null;
-    private Object coverImage = null;
+    private int profileImage = 0;
     private ArrayList<HashMap<String, Object>> temp_scoreLogList = null;
     private ArrayList<HashMap<String, Object>> temp_activityLogList = null;
 
@@ -46,14 +46,16 @@ public class User extends Model{
         User model = new User(); //create model
         model.id = (int) temp.get("id"); //mapping fields process
         model.createdDate = (Date) temp.get("createdDate");
-        model.firstName = "" + temp.get("firstName");
-        model.lastName = "" + temp.get("lastName");
-        model.userName = "" + temp.get("userName");
+        model.idUser = (int) temp.get("idUser");
+        model.birthday = "" + temp.get("birthday");
         model.age = (int) temp.get("age");
         model.score = (int) temp.get("score");
-        model.gender = (int) temp.get("gender");
+        model.height = (int) temp.get("height");
+        model.weight = (int) temp.get("weight");
+        model.waistline = (int) temp.get("waistline");
+        model.bmi = (int) temp.get("bmi");
         model.email = "" + temp.get("email");
-        model.password = "" + temp.get("password");
+        model.profileImage = (int) temp.get("profileImage");
         model.facebookID = "" + temp.get("facebookID");
         model.facebookFirstName = "" + temp.get("facebookFirstName");
         model.facebookLastName = "" + temp.get("facebookLastName");
@@ -69,18 +71,21 @@ public class User extends Model{
         for(HashMap<String, Object> item : temp) { //mapping values
             User model = new User();
             model.id = (int) item.get("id");
+            model.id = (int) item.get("id"); //mapping fields process
             model.createdDate = (Date) item.get("createdDate");
-            model.firstName = (String) item.get("firstName");
-            model.lastName = (String) item.get("lastName");
-            model.userName = (String) item.get("userName");
+            model.idUser = (int) item.get("idUser");
+            model.birthday = "" + item.get("birthday");
             model.age = (int) item.get("age");
             model.score = (int) item.get("score");
-            model.gender = (int) item.get("gender");
-            model.email = (String) item.get("email");
-            model.password = (String) item.get("password");
-            model.facebookID = (String) item.get("facebookID");
-            model.facebookFirstName = (String) item.get("facebookFirstName");
-            model.facebookLastName = (String) item.get("facebookLastName");
+            model.height = (int) item.get("height");
+            model.weight = (int) item.get("weight");
+            model.waistline = (int) item.get("waistline");
+            model.bmi = (int) item.get("bmi");
+            model.email = "" + item.get("email");
+            model.profileImage = (int) item.get("profileImage");
+            model.facebookID = "" + item.get("facebookID");
+            model.facebookFirstName = "" + item.get("facebookFirstName");
+            model.facebookLastName = "" + item.get("facebookLastName");
             model.modifiedDate = (Date) item.get("modifiedDate");
             collection.add(model);
         }
@@ -100,19 +105,21 @@ public class User extends Model{
 
         for(HashMap<String, Object> item : temp) { //mapping values
             User model = new User();
-            model.id = (int) item.get("id");
+            model.id = (int) item.get("id"); //mapping fields process
             model.createdDate = (Date) item.get("createdDate");
-            model.firstName = (String) item.get("firstName");
-            model.lastName = (String) item.get("lastName");
-            model.userName = (String) item.get("userName");
+            model.idUser = (int) item.get("idUser");
+            model.birthday = "" + item.get("birthday");
             model.age = (int) item.get("age");
             model.score = (int) item.get("score");
-            model.gender = (int) item.get("gender");
-            model.email = (String) item.get("email");
-            model.password = (String) item.get("password");
-            model.facebookID = (String) item.get("facebookID");
-            model.facebookFirstName = (String) item.get("facebookFirstName");
-            model.facebookLastName = (String) item.get("facebookLastName");
+            model.height = (int) item.get("height");
+            model.weight = (int) item.get("weight");
+            model.waistline = (int) item.get("waistline");
+            model.bmi = (int) item.get("bmi");
+            model.email = "" + item.get("email");
+            model.profileImage = (int) item.get("profileImage");
+            model.facebookID = "" + item.get("facebookID");
+            model.facebookFirstName = "" + item.get("facebookFirstName");
+            model.facebookLastName = "" + item.get("facebookLastName");
             model.modifiedDate = (Date) item.get("modifiedDate");
             collection.add(model);
         }
@@ -125,14 +132,16 @@ public class User extends Model{
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         HashMap<String, Object> temp = new HashMap<>();
-        temp.put("firstName", firstName);
-        temp.put("lastName", lastName);
-        temp.put("userName", userName);
+        temp.put("id",id);
+        temp.put("birthday", birthday);
         temp.put("age", age);
         temp.put("score", score);
-        temp.put("gender", gender);
+        temp.put("height", height);
+        temp.put("weight", weight);
+        temp.put("waistline", waistline);
+        temp.put("bmi", bmi);
         temp.put("email", email);
-        temp.put("password", password);
+        temp.put("profileImage", profileImage);
         temp.put("facebookID", facebookID);
         temp.put("facebookFirstName", facebookFirstName);
         temp.put("facebookLastName", facebookLastName);
@@ -148,36 +157,20 @@ public class User extends Model{
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         HashMap<String, Object> temp = new HashMap<>();
-        temp.put("id", id);
-        temp.put("firstName", firstName);
-        temp.put("lastName", lastName);
-        temp.put("userName", userName);
+        temp.put("id",id);
+        temp.put("birthday", birthday);
         temp.put("age", age);
         temp.put("score", score);
-        temp.put("gender", getGenderDefinition());
+        temp.put("height", height);
+        temp.put("weight", weight);
+        temp.put("waistline", waistline);
+        temp.put("bmi", bmi);
         temp.put("email", email);
+        temp.put("profileImage", profileImage);
         temp.put("facebookID", facebookID);
         temp.put("facebookFirstName", facebookFirstName);
         temp.put("facebookLastName", facebookLastName);
         return temp;
-    }
-
-    public void setFirstName(String firstName)
-    {
-        this.firstName = firstName;
-        updateModifiedDate();
-    }
-
-    public void setLastName(String lastName)
-    {
-        this.lastName = lastName;
-        updateModifiedDate();
-    }
-
-    public void setUsername(String userName)
-    {
-        this.userName = userName;
-        updateModifiedDate();
     }
 
     public HashMap<String, Object> setAge(int age)
@@ -191,7 +184,7 @@ public class User extends Model{
         return StatusDescription.createProcessStatus(true);
     }
 
-    public HashMap<String, Object> setGender(int gender) // 0 = female, 1 = male
+    /*public HashMap<String, Object> setGender(int gender) // 0 = female, 1 = male
     {
         if(gender > 1 || gender < 0) //gender must be 0 or 1
             return StatusDescription.createProcessStatus(false, "Undefined gender.");
@@ -200,17 +193,11 @@ public class User extends Model{
         updateModifiedDate();
 
         return StatusDescription.createProcessStatus(true);
-    }
+    }*/
 
     public void setEmail(String email)
     {
         this.email = email;
-        updateModifiedDate();
-    }
-
-    public void setPassword(String password)
-    {
-        this.password = password;
         updateModifiedDate();
     }
 
@@ -257,18 +244,6 @@ public class User extends Model{
         return StatusDescription.createProcessStatus(true);
     }
 
-    public void setProfileImage(Object profileImage)
-    {
-        this.profileImage = profileImage;
-        updateModifiedDate();
-    }
-
-    public void setCoverImage(Object coverImage)
-    {
-        this.coverImage = coverImage;
-        updateModifiedDate();
-    }
-
     public void setFacebookID(String facebookID)
     {
         this.facebookID = facebookID;
@@ -287,14 +262,62 @@ public class User extends Model{
         updateModifiedDate();
     }
 
-    public String getFirstName()
-    {
-        return firstName;
+    public int getIdUser() {
+        return idUser;
     }
 
-    public String getLastName()
-    {
-        return lastName;
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+        updateModifiedDate();
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+        updateModifiedDate();
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+        updateModifiedDate();
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+        updateModifiedDate();
+    }
+
+    public int getWaistline() {
+        return waistline;
+    }
+
+    public void setWaistline(int waistline) {
+        this.waistline = waistline;
+        updateModifiedDate();
+    }
+
+    public int getBmi() {
+        return bmi;
+    }
+
+    public void setBmi(int bmi) {
+        this.bmi = bmi;
+    }
+
+    public void setProfileImage(int profileImage) {
+        this.profileImage = profileImage;
+        updateModifiedDate();
     }
 
     public int getAge()
@@ -307,12 +330,7 @@ public class User extends Model{
         return score;
     }
 
-    public int getGender()
-    {
-        return gender;
-    }
-
-    public String getGenderDefinition() //definition of gender number
+    /*public String getGenderDefinition() //definition of gender number
     {
         switch (gender) {
             case 0:
@@ -322,11 +340,7 @@ public class User extends Model{
             default:
                 return "undefined";
         }
-    }
-
-    public String getPassword() {
-        return password;
-    }
+    }*/
 
     public String getEmail()
     {
@@ -336,11 +350,6 @@ public class User extends Model{
     public Object getProfileImage()
     {
         return profileImage;
-    }
-
-    public Object getCoverImage()
-    {
-        return coverImage;
     }
 
     public String getFacebookID()
