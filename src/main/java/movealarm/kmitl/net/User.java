@@ -16,7 +16,7 @@ public class User extends Model{
     private int height = 0;
     private int weight = 0;
     private int waistline = 0;
-    private int bmi = 0;
+    private double bmi = 0;
     private String email = null;
     private String facebookID = null;
     private String facebookFirstName = null;
@@ -306,11 +306,11 @@ public class User extends Model{
         updateModifiedDate();
     }
 
-    public int getBmi() {
+    public double getBmi() {
         return bmi;
     }
 
-    public void setBmi(int bmi) {
+    public void setBmi(double bmi) {
         this.bmi = bmi;
     }
 

@@ -147,7 +147,7 @@ public class UserController {
             user.setHeight(converter.toInt(userData.get("height")));
             user.setWeight(converter.toInt(userData.get("weight")));
             user.setWaistline(converter.toInt(userData.get("waistline")));
-            user.setBmi(converter.toInt(userData.get("bmi")));
+            user.setBmi(converter.toDouble(userData.get("bmi")));
             user.setProfileImage(converter.toInt(userData.get("profileImage")));
             user.setFacebookID(converter.toString(userData.get("facebookID")));
             user.setFacebookFirstName(converter.toString(userData.get("facebookFirstName")));
@@ -190,7 +190,7 @@ public class UserController {
             user.setHeight(converter.toInt(userData.get("height")));
             user.setWeight(converter.toInt(userData.get("weight")));
             user.setWaistline(converter.toInt(userData.get("waistline")));
-            user.setBmi(converter.toInt(userData.get("bmi")));
+            user.setBmi(converter.toDouble(userData.get("bmi")));
             user.setProfileImage(converter.toInt(userData.get("profileImage")));
             user.setFacebookID(converter.toString(userData.get("facebookID")));
             user.setFacebookFirstName(converter.toString(userData.get("facebookFirstName")));
