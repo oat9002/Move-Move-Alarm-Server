@@ -43,10 +43,10 @@ public class EventController {
 
             int hourRandom = (int) (Math.random() * 23); //random time
             int minuteRandom = (int) (Math.random() * 59);
-            while (hourRandom < calendar.get(Calendar.HOUR_OF_DAY) || (hourRandom < calendar.get(Calendar.HOUR_OF_DAY) && minuteRandom < calendar.get(Calendar.MINUTE))) {
+            /*while (hourRandom < calendar.get(Calendar.HOUR_OF_DAY) || (hourRandom < calendar.get(Calendar.HOUR_OF_DAY) && minuteRandom < calendar.get(Calendar.MINUTE))) {
                 hourRandom = (int) (Math.random() * 23);
                 minuteRandom = (int) (Math.random() * 59);
-            }
+            }*/
             calendar.set(Calendar.HOUR_OF_DAY, hourRandom);
             calendar.set(Calendar.MINUTE, minuteRandom);
             calendar.set(Calendar.SECOND, 0);
