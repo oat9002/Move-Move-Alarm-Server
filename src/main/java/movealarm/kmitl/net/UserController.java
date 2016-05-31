@@ -349,7 +349,7 @@ public class UserController {
         User user;
         HashMap<String, Object> JSON;
         try {
-            user = User.where("facebookID","=",facebookID)[0];
+            user = User.where("facebookID","LIKE",facebookID)[0];
             user.setFacebookFirstName(facebookFirstName);
             JSON = StatusDescription.createProcessStatus(true);
         }
@@ -362,10 +362,10 @@ public class UserController {
 
         Group group = null;
         try {
-            HashMap<String, Object> userRawData = databaseInquirer.where("user", "facebookID", "=", "" + user.getFacebookID()).get(0);
+            HashMap<String, Object> userRawData = databaseInquirer.where("user", "facebookID", "LIKE", "" + user.getFacebookID()).get(0);
             group = Group.find(converter.toInt(userRawData.get("groupID")));
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
 
         if(group != null)

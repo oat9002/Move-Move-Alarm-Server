@@ -19,8 +19,7 @@ public class SQLInquirer implements DatabaseInterface {
 
     public static SQLInquirer getInstance()
     {
-        if(sqlInquirer == null)
-            sqlInquirer = new SQLInquirer();
+        sqlInquirer = new SQLInquirer();
         return sqlInquirer;
     }
 
@@ -42,7 +41,7 @@ public class SQLInquirer implements DatabaseInterface {
 
             collection.add(temp); //one row one HashMap
         }
-
+        closeConnection();
         return collection;
     }
 
@@ -53,6 +52,7 @@ public class SQLInquirer implements DatabaseInterface {
 
     public ArrayList<HashMap<String, Object>> where(String sqlCommand) throws SQLException {
         ArrayList<HashMap<String, Object>> collection = query(sqlCommand); //fill command manually
+        closeConnection();
         return collection;
     }
 
@@ -69,6 +69,7 @@ public class SQLInquirer implements DatabaseInterface {
     public void update(String tableName, String valueSet, String columnName, String operator, String value) throws SQLException { //update or edit data
         startConnection();
         statement.executeUpdate("UPDATE " + tableName + " SET " + valueSet + " WHERE " + columnName + " " + operator + " " + value);
+        closeConnection();
     }
 
     public HashMap<String, Object> insert(String tableName, String columnNamesSet, String values) throws SQLException {
@@ -81,6 +82,7 @@ public class SQLInquirer implements DatabaseInterface {
         HashMap<String, Object>temp = new HashMap<String, Object>(); //a model that is just created and saved need an id and created date
         temp.put("id", id);
         temp.put("created_date", where(tableName, "id", "=", id).get(0).get("created_date"));
+        closeConnection();
         return temp;
     }
 
@@ -93,11 +95,13 @@ public class SQLInquirer implements DatabaseInterface {
         }
         startConnection();
         statement.executeUpdate("INSERT INTO " + tableName + " ( " + columnNamesSet + " ) VALUES " + values);
+        closeConnection();
     }
 
     public void delete(String tableName, String conditions) throws SQLException {
         startConnection();
         statement.executeUpdate("DELETE FROM " + tableName + " WHERE " + conditions);
+        closeConnection();
     }
 
     public boolean startConnection()

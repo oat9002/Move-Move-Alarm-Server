@@ -6,11 +6,10 @@ import java.util.Map;
 
 public class ModelCollection {
     public static ModelCollection modelCollection = null;
-    private DatabaseInterface databaseInquirer;
 
     private ModelCollection(DatabaseInterface databaseInquirer)
     {
-        this.databaseInquirer = databaseInquirer;
+
     }
 
     public static ModelCollection getInstance(DatabaseInterface databaseInquirer)
@@ -23,6 +22,7 @@ public class ModelCollection {
     public HashMap<String, Object> find(String tableName, int id) //find method will query data by an id, each id is unique so find method will return only 1 object
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             return databaseInquirer.where(tableName,"id", "=", "" +id).get(0);
         } catch (Exception e) {
             System.out.println("An error has occurred in ModelCollection.find()");
@@ -34,6 +34,7 @@ public class ModelCollection {
     public ArrayList<HashMap<String, Object>> all(String tableName) //return all model
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             return databaseInquirer.all(tableName);
         } catch (Exception e) {
             System.out.println("An error has occurred in ModelCollection.all()");
@@ -45,6 +46,7 @@ public class ModelCollection {
     public ArrayList<HashMap<String, Object>> where(String tableName, String columnName, String operator, String value) //pass values method
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             return databaseInquirer.where(tableName, columnName, operator, value);
         } catch (Exception e) {
             System.out.println("An error has occurred in ModelCollection.where()");
@@ -73,6 +75,7 @@ public class ModelCollection {
         values = values.substring(0, values.length() - 2); //remove unused quote or period
 
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             return databaseInquirer.insert(model.getTableName(), columnsName, values); //insert data to the database
         } catch (Exception e) {
             System.out.println("An error has occurred in while creating a model name '" + model.getClass().getSimpleName() + "'.");
@@ -99,6 +102,7 @@ public class ModelCollection {
         valueSet = valueSet.substring(0, valueSet.length() - 2); //remove unused quote or period
 
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             databaseInquirer.update(model.getTableName(), valueSet, "id", "=", "" + model.getID()); //update data to the database
             return true;
         } catch (Exception e) {
@@ -111,6 +115,7 @@ public class ModelCollection {
     public boolean delete(Model model)
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             databaseInquirer.delete(model.getTableName(), "id = '" + model.getID() + "'"); //delete data on the database
             model = null;
         } catch (Exception e) {
@@ -124,6 +129,7 @@ public class ModelCollection {
     public boolean manualEditData(String tableName, String valueSet, String columnName, String operator, String value)
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             databaseInquirer.update(tableName, valueSet, columnName, operator, value);
             return true;
         } catch (Exception e) {
@@ -136,6 +142,7 @@ public class ModelCollection {
     public boolean manualInsertDataMultiple(String tableName, String columnNameSet, String[] valuesSet)
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             databaseInquirer.insertMultiple(tableName, columnNameSet, valuesSet);
             return true;
         } catch (Exception e) {
@@ -148,6 +155,7 @@ public class ModelCollection {
     public boolean manualDeleteData(String tableName, String conditions)
     {
         try {
+            DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
             databaseInquirer.delete(tableName, conditions);
             return true;
         } catch (Exception e) {

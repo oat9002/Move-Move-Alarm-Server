@@ -53,7 +53,7 @@ public class User extends Model{
         model.height = (int) temp.get("height");
         model.weight = (int) temp.get("weight");
         model.waistline = (int) temp.get("waistline");
-        model.bmi = (int) temp.get("bmi");
+        model.bmi = (double) temp.get("bmi");
         model.email = "" + temp.get("email");
         model.profileImage = (int) temp.get("profileImage");
         model.facebookID = "" + temp.get("facebookID");
@@ -79,7 +79,7 @@ public class User extends Model{
             model.height = (int) item.get("height");
             model.weight = (int) item.get("weight");
             model.waistline = (int) item.get("waistline");
-            model.bmi = (int) item.get("bmi");
+            model.bmi = (double) item.get("bmi");
             model.email = "" + item.get("email");
             model.profileImage = (int) item.get("profileImage");
             model.facebookID = "" + item.get("facebookID");
