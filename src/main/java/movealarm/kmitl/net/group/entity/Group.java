@@ -1,11 +1,16 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.group.entity;
+
+import movealarm.kmitl.net.user.entity.User;
+import movealarm.kmitl.net.common.Converter;
+import movealarm.kmitl.net.common.Model;
+import movealarm.kmitl.net.common.StatusDescription;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Group extends Model{
+public class Group extends Model {
     private String name = null;
     private String status = null;
     private int score = 0;
@@ -284,7 +289,7 @@ public class Group extends Model{
                 return StatusDescription.createProcessStatus(false, "This user is already added to the temporary removed list.");
         }
 
-        if(User.find(user.id) == null)
+        if(User.find(user.getID()) == null)
             return StatusDescription.createProcessStatus(false, "This user is already removed from the database.");
 
         temp_removeUserList.add(user);

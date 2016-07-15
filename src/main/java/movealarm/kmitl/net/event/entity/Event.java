@@ -1,4 +1,8 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.event.entity;
+
+import movealarm.kmitl.net.posture.entity.Posture;
+import movealarm.kmitl.net.common.Converter;
+import movealarm.kmitl.net.common.Model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,7 +12,7 @@ import java.util.HashMap;
 /**
  * Created by oat90 on 5/11/2558.
  */
-public class Event extends Model{
+public class Event extends Model {
     ArrayList<Posture> postures = null;
     private String postureList = null;
     private Date time;

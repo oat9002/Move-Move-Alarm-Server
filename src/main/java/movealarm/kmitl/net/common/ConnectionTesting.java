@@ -1,4 +1,4 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.common;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

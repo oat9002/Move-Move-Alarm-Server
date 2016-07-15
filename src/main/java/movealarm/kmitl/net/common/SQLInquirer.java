@@ -1,4 +1,4 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.common;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,10 +1,14 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.posture.controller;
 
+import movealarm.kmitl.net.common.Converter;
+import movealarm.kmitl.net.common.DatabaseInterface;
+import movealarm.kmitl.net.common.SQLInquirer;
+import movealarm.kmitl.net.common.StatusDescription;
+import movealarm.kmitl.net.posture.entity.Posture;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 
 /**

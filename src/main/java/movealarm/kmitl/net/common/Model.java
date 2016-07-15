@@ -1,10 +1,10 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.common;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-abstract class Model {
+public abstract class Model {
     protected static ModelCollection modelCollection = ModelCollection.getInstance(SQLInquirer.getInstance());
     protected String tableName;
     protected ArrayList<String> requiredFields = null;

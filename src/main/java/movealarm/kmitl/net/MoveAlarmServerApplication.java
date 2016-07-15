@@ -1,9 +1,8 @@
 package movealarm.kmitl.net;
 
+import movealarm.kmitl.net.common.SQLInquirer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.HashMap;
 
 @SpringBootApplication
 public class MoveAlarmServerApplication {

@@ -1,4 +1,6 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.posture.entity;
+
+import movealarm.kmitl.net.common.Model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

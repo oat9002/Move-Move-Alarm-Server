@@ -1,5 +1,8 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.user.controller;
 
+import movealarm.kmitl.net.common.*;
+import movealarm.kmitl.net.group.entity.Group;
+import movealarm.kmitl.net.user.entity.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

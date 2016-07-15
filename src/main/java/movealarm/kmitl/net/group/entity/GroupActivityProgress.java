@@ -1,4 +1,8 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.group.entity;
+
+import movealarm.kmitl.net.common.Converter;
+import movealarm.kmitl.net.common.Model;
+import movealarm.kmitl.net.common.StatusDescription;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

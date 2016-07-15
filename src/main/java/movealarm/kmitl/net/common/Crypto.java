@@ -1,4 +1,4 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.common;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

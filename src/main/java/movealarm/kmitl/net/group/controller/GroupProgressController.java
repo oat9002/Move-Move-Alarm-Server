@@ -1,5 +1,11 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.group.controller;
 
+import movealarm.kmitl.net.common.Converter;
+import movealarm.kmitl.net.common.DatabaseInterface;
+import movealarm.kmitl.net.common.SQLInquirer;
+import movealarm.kmitl.net.common.StatusDescription;
+import movealarm.kmitl.net.group.entity.Group;
+import movealarm.kmitl.net.group.entity.GroupActivityProgress;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,27 +13,26 @@ import org.springframework.web.bind.annotation.RestController;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 @RestController
-public class UserProgressController {
+public class GroupProgressController {
 
     private Converter converter = Converter.getInstance();
     private DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
 
-    @RequestMapping("/userProgress/getAllUserLogs")
+    @RequestMapping("/groupProgress/getAllGroupLogs")
     public String getAllLog(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
         HashMap<String, Object> data = converter.JSONToHashMap(JSON);
 
-        User user = User.find(converter.toInt(data.get("id")));
-        if(user == null)
-            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist.rata"));
+        Group group = Group.find(converter.toInt(data.get("id")));
+        if(group == null)
+            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Group does not exist."));
 
         ArrayList<HashMap<String, Object>> queryData;
         try {
-            queryData = databaseInquirer.where("userActivity_progress", "userID", "=", converter.toString(user.getID()));
+            queryData = databaseInquirer.where("groupActivity_progress", "groupID", "=", converter.toString(group.getID()));
         } catch (Exception e) {
             e.printStackTrace();
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "An error has occurred while qurying data from the database."));
@@ -43,12 +48,12 @@ public class UserProgressController {
         return converter.HashMapToJSON(response);
     }
 
-    @RequestMapping("/userProgress/getByDate")
+    @RequestMapping("/groupProgress/getByDate")
     public String getByDate(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         HashMap<String, Object> data = converter.JSONToHashMap(JSON);
-        HashMap<String, Object> userData = converter.JSONToHashMap(converter.toString(data.get("user")));
+        HashMap<String, Object> groupData = converter.JSONToHashMap(converter.toString(data.get("group")));
 
         String startDate = null;
         String endDate = null;
@@ -59,13 +64,13 @@ public class UserProgressController {
             e.printStackTrace();
         }
 
-        User user = User.find(converter.toInt(userData.get("id")));
-        if(user == null)
-            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist."));
+        Group group = Group.find(converter.toInt(groupData.get("id")));
+        if(group == null)
+            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Group does not exist."));
 
         ArrayList<HashMap<String, Object>> queryData;
         try {
-            queryData = databaseInquirer.where("userActivity_progress", "date", "BETWEEN", startDate + "' AND '" + endDate);
+            queryData = databaseInquirer.where("groupActivity_progress", "date", "BETWEEN", startDate + "' AND '" + endDate);
         } catch (Exception e) {
             e.printStackTrace();
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "An error has occurred while qurying data from the database."));
@@ -81,19 +86,19 @@ public class UserProgressController {
         return converter.HashMapToJSON(response);
     }
 
-    @RequestMapping("/userProgress/getByUser")
-    public String getByUser(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
+    @RequestMapping("/groupProgress/getByGroup")
+    public String getByGroup(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
         HashMap<String, Object> data = converter.JSONToHashMap(JSON);
-        HashMap<String, Object> userData = converter.JSONToHashMap(converter.toString(data.get("user")));
+        HashMap<String, Object> groupData = converter.JSONToHashMap(converter.toString(data.get("group")));
 
-        User user = User.find(converter.toInt(userData.get("id")));
-        if(user == null)
-            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "user does not exist."));
+        Group group = Group.find(converter.toInt(groupData.get("id")));
+        if(group == null)
+            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "group does not exist."));
 
-        UserActivityProgress progress = UserActivityProgress.findByUser(user, converter.toInt(data.get("type")));
+        GroupActivityProgress progress = GroupActivityProgress.findByGroup(group);
         if(progress == null)
-            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "No user activity progress."));
+            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "No group activity progress."));
 
         HashMap<String, Object> response = StatusDescription.createProcessStatus(true);
         response.put("progress", progress.getGeneralValues());
@@ -101,22 +106,21 @@ public class UserProgressController {
         return converter.HashMapToJSON(response);
     }
 
-    @RequestMapping("/userProgress/save")
+    @RequestMapping("/groupProgress/save")
     public String updateProgress(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
         HashMap<String, Object> data = converter.JSONToHashMap(JSON);
-        HashMap<String, Object> userData = converter.JSONToHashMap(converter.toString(data.get("user")));
+        HashMap<String, Object> groupData = converter.JSONToHashMap(converter.toString(data.get("group")));
         HashMap<String, Object> progressData = converter.JSONToHashMap(converter.toString(data.get("activityProgress")));
 
-        User user = User.find(converter.toInt(userData.get("id")));
-        if(user == null)
-            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "user does not exist."));
+        Group group = Group.find(converter.toInt(groupData.get("id")));
+        if(group == null)
+            return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "group does not exist."));
 
-        //type = 0 => day
-        UserActivityProgress progress = UserActivityProgress.findByUser(user,0);
+        GroupActivityProgress progress = GroupActivityProgress.findByGroup(group);
         if(progress == null) {
-            progress = new UserActivityProgress(0);
-            progress.setUser(user);
+            progress = new GroupActivityProgress();
+            progress.setGroup(group);
         }
 
         progress.setNumberOfAccept(converter.toInt(progressData.get("numberOfAccept")));
@@ -128,9 +132,7 @@ public class UserProgressController {
         progress.setWrist(converter.toInt(progressData.get("wrist")));
         progress.setWaist(converter.toInt(progressData.get("waist")));
         progress.setHip_leg_calf(converter.toInt(progressData.get("hip_keg_calf")));
-        //progress.setCancelActivity(converter.toInt(progressData.get("cancelActivity")));
-
-        /*try {
+       /* try {
             progress.setDate((Date) progressData.get("date"));
             progress.setNumberOfCancel(converter.toInt(progressData.get("numberOfCancel")));
         } catch (Exception e) {

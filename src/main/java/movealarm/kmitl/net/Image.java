@@ -1,5 +1,8 @@
 package movealarm.kmitl.net;
 
+import movealarm.kmitl.net.common.Model;
+import movealarm.kmitl.net.common.StatusDescription;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

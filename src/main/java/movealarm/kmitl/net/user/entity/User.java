@@ -1,4 +1,7 @@
-package movealarm.kmitl.net;
+package movealarm.kmitl.net.user.entity;
+
+import movealarm.kmitl.net.common.Model;
+import movealarm.kmitl.net.common.StatusDescription;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.HashMap;
 /**
  * Created by Moobi on 30-Oct-15.
  */
-public class User extends Model{
+public class User extends Model {
     //private int idUser = 0;
     private String birthday = null;
     private int age = 0;
