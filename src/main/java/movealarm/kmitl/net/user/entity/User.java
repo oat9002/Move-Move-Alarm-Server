@@ -1,18 +1,14 @@
 package movealarm.kmitl.net.user.entity;
 
 import movealarm.kmitl.net.common.AbstractEntity;
-import movealarm.kmitl.net.common.Model;
 import movealarm.kmitl.net.common.StatusDescription;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import static movealarm.kmitl.net.common.ModelCollection.modelCollection;
 
 /**
  * Created by Moobi on 30-Oct-15.
@@ -35,59 +31,10 @@ public class User extends AbstractEntity {
     private int profileImage;
 
     @Transient
-    private ArrayList<HashMap<String, Object>> temp_scoreLogList = null;
+    private ArrayList<HashMap<String, Object>> temp_scoreLogList = new ArrayList<>();
     @Transient
-    private ArrayList<HashMap<String, Object>> temp_activityLogList = null;
+    private ArrayList<HashMap<String, Object>> temp_activityLogList = new ArrayList<>();
 
-    public User()
-    {
-        temp_scoreLogList = new ArrayList<>();
-        temp_activityLogList = new ArrayList<>();
-    }
-
-    public HashMap<String, Object> getValues() //get all values from model
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        HashMap<String, Object> temp = new HashMap<>();
-        temp.put("id",id);
-        temp.put("birthday", birthday);
-        temp.put("age", age);
-        temp.put("score", score);
-        temp.put("height", height);
-        temp.put("weight", weight);
-        temp.put("waistline", waistline);
-        temp.put("bmi", bmi);
-        temp.put("email", email);
-        temp.put("profileImage", profileImage);
-        temp.put("facebookID", facebookID);
-        temp.put("facebookFirstName", facebookFirstName);
-        temp.put("facebookLastName", facebookLastName);
-        if(modifiedDate == null)
-            temp.put("modifiedDate", null);
-        else
-            temp.put("modifiedDate", sdf.format(modifiedDate));
-        return temp;
-    }
-
-    public HashMap<String, Object> getGeneralValues() //get only common values
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        HashMap<String, Object> temp = new HashMap<>();
-        temp.put("id",id);
-        temp.put("birthday", birthday);
-        temp.put("age", age);
-        temp.put("score", score);
-        temp.put("height", height);
-        temp.put("weight", weight);
-        temp.put("waistline", waistline);
-        temp.put("bmi", bmi);
-        temp.put("email", email);
-        temp.put("profileImage", profileImage);
-        temp.put("facebookID", facebookID);
-        temp.put("facebookFirstName", facebookFirstName);
-        temp.put("facebookLastName", facebookLastName);
-        return temp;
-    }
 
     public HashMap<String, Object> setAge(int age)
     {
@@ -112,41 +59,20 @@ public class User extends AbstractEntity {
         updateModifiedDate();
     }
 
-    public HashMap<String, Object> increaseScore(int score, String description) //this method will create score log and put into temporary log list
-    { //score log will not be inserted to the database until method save is called
-        HashMap<String, Object> temp_scoreLog = new HashMap<>();
-        int changeScore = Math.abs(score); //prevent from improper integer
-
-        this.score += changeScore;
-        temp_scoreLog.put("id", id);
-        temp_scoreLog.put("currentScore", this.score); //a score after save
-        temp_scoreLog.put("modifiedScore", changeScore);
-        temp_scoreLog.put("description", description);
-        temp_scoreLogList.add(temp_scoreLog); //add to temp
-
-        updateModifiedDate();
-
-        return StatusDescription.createProcessStatus(true);
+    public ArrayList<HashMap<String, Object>> getTemp_scoreLogList() {
+        return temp_scoreLogList;
     }
 
-    public HashMap<String, Object> decreaseScore(int score, String description) //like increaseScore method but decrease
-    {
-        HashMap<String, Object> temp_scoreLog = new HashMap<>();
-        int changeScore = Math.abs(score);
+    public void setTemp_scoreLogList(ArrayList<HashMap<String, Object>> temp_scoreLogList) {
+        this.temp_scoreLogList = temp_scoreLogList;
+    }
 
-        if(this.score - changeScore < 0)
-            return StatusDescription.createProcessStatus(false, "The score cannot be under zero.");
+    public ArrayList<HashMap<String, Object>> getTemp_activityLogList() {
+        return temp_activityLogList;
+    }
 
-        this.score -= changeScore;
-        temp_scoreLog.put("id", id);
-        temp_scoreLog.put("currentScore", this.score);
-        temp_scoreLog.put("modifiedScore", -changeScore);
-        temp_scoreLog.put("description", description);
-        temp_scoreLogList.add(temp_scoreLog);
-
-        updateModifiedDate();
-
-        return StatusDescription.createProcessStatus(true);
+    public void setTemp_activityLogList(ArrayList<HashMap<String, Object>> temp_activityLogList) {
+        this.temp_activityLogList = temp_activityLogList;
     }
 
     public void setFacebookID(String facebookID)
@@ -254,50 +180,6 @@ public class User extends AbstractEntity {
     public Date getModifiedDate()
     {
         return modifiedDate;
-    }
-
-    public HashMap<String, Object> save()
-    {
-
-        if(createdDate == null) {
-            HashMap<String, Object> temp = modelCollection.create(this);
-            if(temp == null)
-                return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
-            id = Integer.parseInt("" + temp.get("id"));
-            createdDate = (Date) temp.get("created_date");
-            return StatusDescription.createProcessStatus(true);
-        }
-
-        HashMap<String, Object> addScoreLogStatus = addScoreLogToDatabase(); //add score log to database
-        if(addScoreLogStatus != null) //if an error has occurred while adding score logs to the database
-            return addScoreLogStatus; //break saving process and return error description
-
-        temp_scoreLogList = null;
-        return StatusDescription.createProcessStatus(modelCollection.save(this));
-    }
-
-
-    public HashMap<String, Object> addScoreLogToDatabase()
-    {
-        if(temp_scoreLogList.size() != 0) { //if temporary list is not empty
-            String[] valuesSet = new String[temp_scoreLogList.size()]; //create array to keep a set of values of each score log
-
-            for(int i = 0; i < temp_scoreLogList.size(); i++) {
-                HashMap<String, Object> item = temp_scoreLogList.get(i);
-                valuesSet[i] = "" + item.get("id") + ", " + item.get("currentScore") + ", " + item.get("modifiedScore") + ", '" + item.get("description") + "'"; //concat string
-            }
-
-            String colNameSet = "user_id, currentScore, modifiedScore, description"; //set of column name of values
-
-            if(!modelCollection.manualInsertDataMultiple("user_score", colNameSet, valuesSet)) { //if inserting data to the database is error
-                System.out.println("An error has occurred while adding a score log.");
-                return StatusDescription.createProcessStatus(false, "An error has occurred while adding a score log.");
-            }
-
-            temp_scoreLogList.clear(); //clear temp score log list
-        }
-
-        return null;
     }
 }
 

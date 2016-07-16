@@ -2,6 +2,7 @@ package movealarm.kmitl.net.common;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import movealarm.kmitl.net.user.entity.User;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class Converter {
         return gson.toJson(map); //convert HashMap to JSON
     }
 
-    public HashMap<String, Object>[] ModelArrayToHashMapArray(Model[] models)
+    public HashMap<String, Object>[] ModelArrayToHashMapArray(User[] models)
     {
         ArrayList<HashMap<String, Object>> mapList = new ArrayList<>();
 
