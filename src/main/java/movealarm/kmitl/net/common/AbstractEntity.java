@@ -38,7 +38,7 @@ public abstract class AbstractEntity {
         this.modifiedDate = modifiedDate;
     }
 
-    protected void updateModifiedDate()
+    public void updateModifiedDate()
     {
         modifiedDate = new Date();
     }

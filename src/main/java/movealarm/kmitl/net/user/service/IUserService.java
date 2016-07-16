@@ -22,15 +22,11 @@ public interface IUserService {
 
     User[] all();
 
-    HashMap<String, Object>  update(User user);
+    HashMap<String, Object> update(User user);
 
     HashMap<String, Object> save(User user);
 
-    HashMap<String, Object>  delete(User user);
+    HashMap<String, Object> delete(User user);
 
-    HashMap<String, Object> addScoreLogToDatabase(User user);
-
-    HashMap<String, Object> increaseScore(User user, int score, String description); //this method will create score log and put into temporary log list
-
-    HashMap<String, Object> decreaseScore(User user, int score, String description); //like increaseScore method but decrease
+    void addTemp_scoreLogList(HashMap<String, Object> temp_score, User user);
 }

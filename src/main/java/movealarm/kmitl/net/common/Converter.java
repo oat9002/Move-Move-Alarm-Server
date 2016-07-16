@@ -3,6 +3,9 @@ package movealarm.kmitl.net.common;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import movealarm.kmitl.net.user.entity.User;
+import movealarm.kmitl.net.user.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -12,9 +15,14 @@ import java.util.List;
 /**
  * Created by oat90 on 25/10/2558.
  */
+
+@Component
 public class Converter {
     private Gson gson;
     public static Converter instance = null;
+
+    @Autowired
+    private IUserService userService;
 
     private Converter() { //make constructor as private to implement the class with singleton design pattern
         gson = new Gson();
@@ -43,7 +51,7 @@ public class Converter {
         ArrayList<HashMap<String, Object>> mapList = new ArrayList<>();
 
         for(int i = 0; i < models.length; i++)
-            mapList.add(models[i].getGeneralValues());
+            mapList.add(userService.getGeneralValues(models[i]));
 
         HashMap<String, Object>[] arrayOfMap = mapList.toArray((new HashMap[mapList.size()])); //convert ArrayList to normal array
 

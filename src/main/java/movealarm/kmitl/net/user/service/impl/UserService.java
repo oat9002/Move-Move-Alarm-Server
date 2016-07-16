@@ -1,18 +1,18 @@
 package movealarm.kmitl.net.user.service.impl;
 
+import movealarm.kmitl.net.common.Converter;
 import movealarm.kmitl.net.common.StatusDescription;
 import movealarm.kmitl.net.user.entity.User;
 import movealarm.kmitl.net.user.repository.UserRepository;
+import movealarm.kmitl.net.user.repository.UserScoreRepository;
 import movealarm.kmitl.net.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import static movealarm.kmitl.net.common.ModelCollection.modelCollection;
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 /**
  * Created by oat on 7/16/16.
@@ -23,6 +23,15 @@ public class UserService implements IUserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserScoreRepository userScoreRepository;
+
+    @Autowired
+    private UserScoreService userScoreService;
+
+    @Autowired
+    private Converter converter;
 
     @Override
     public HashMap<String, Object> getValues(User user) {
@@ -109,7 +118,7 @@ public class UserService implements IUserService{
             return StatusDescription.createProcessStatus(true);
         }
 
-        HashMap<String, Object> addScoreLogStatus = addScoreLogToDatabase(user); //add score log to database
+        HashMap<String, Object> addScoreLogStatus = userScoreService.addScoreLogToDatabase(user); //add score log to database
         if(addScoreLogStatus != null) //if an error has occurred while adding score logs to the database
             return addScoreLogStatus; //break saving process and return error description
 
@@ -124,68 +133,15 @@ public class UserService implements IUserService{
             return StatusDescription.createProcessStatus(true);
         }
         catch (Exception e) {
-            return StatusDescription.createProcessStatus(false);
+            return StatusDescription.createProcessStatus(false, "Due to database error.");
         }
     }
 
     @Override
-    public HashMap<String, Object> addScoreLogToDatabase(User user) {
-        if(user.getTemp_scoreLogList().size() != 0) { //if temporary list is not empty
-            String[] valuesSet = new String[user.getTemp_scoreLogList().size()]; //create array to keep a set of values of each score log
-
-            for(int i = 0; i < user.getTemp_scoreLogList().size(); i++) {
-                HashMap<String, Object> item = user.getTemp_scoreLogList().get(i);
-                valuesSet[i] = "" + item.get("id") + ", " + item.get("currentScore") + ", " + item.get("modifiedScore") + ", '" + item.get("description") + "'"; //concat string
-            }
-
-            String colNameSet = "user_id, currentScore, modifiedScore, description"; //set of column name of values
-
-            if(!modelCollection.manualInsertDataMultiple("user_score", colNameSet, valuesSet)) { //if inserting data to the database is error
-                System.out.println("An error has occurred while adding a score log.");
-                return StatusDescription.createProcessStatus(false, "An error has occurred while adding a score log.");
-            }
-
-            temp_scoreLogList.clear(); //clear temp score log list
-        }
-
-        return null;
+    public void addTemp_scoreLogList(HashMap<String, Object> temp_score, User user) {
+        ArrayList<HashMap<String, Object>> temp = user.getTemp_scoreLogList();
+        temp.add(temp_score);
+        user.setTemp_scoreLogList(temp);
     }
 
-    @Override
-    public HashMap<String, Object> increaseScore(User user, int score, String description) {
-        //score log will not be inserted to the database until method save is called
-        HashMap<String, Object> temp_scoreLog = new HashMap<>();
-        int changeScore = Math.abs(score); //prevent from improper integer
-
-        this.score += changeScore;
-        temp_scoreLog.put("id", id);
-        temp_scoreLog.put("currentScore", this.score); //a score after save
-        temp_scoreLog.put("modifiedScore", changeScore);
-        temp_scoreLog.put("description", description);
-        temp_scoreLogList.add(temp_scoreLog); //add to temp
-
-        updateModifiedDate();
-
-        return StatusDescription.createProcessStatus(true);
-    }
-
-    @Override
-    public HashMap<String, Object> decreaseScore(User user, int score, String description) {
-        HashMap<String, Object> temp_scoreLog = new HashMap<>();
-        int changeScore = Math.abs(score);
-
-        if(this.score - changeScore < 0)
-            return StatusDescription.createProcessStatus(false, "The score cannot be under zero.");
-
-        this.score -= changeScore;
-        temp_scoreLog.put("id", id);
-        temp_scoreLog.put("currentScore", this.score);
-        temp_scoreLog.put("modifiedScore", -changeScore);
-        temp_scoreLog.put("description", description);
-        temp_scoreLogList.add(temp_scoreLog);
-
-        updateModifiedDate();
-
-        return StatusDescription.createProcessStatus(true);
-    }
 }

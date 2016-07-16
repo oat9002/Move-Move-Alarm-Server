@@ -20,8 +20,4 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select * from User where :colName :operator :value :extraCondition")
     User[] where(@Param("colName")String colName, @Param("operator")String operator, @Param("value")String value, @Param("extraCondition")String extraCondition);
 
-
-    HashMap<String, Object> insert(String tableName, String columnNamesSet, String values);
-
-    public void insertMultiple(String tableName, String columnNamesSet, String[] valuesSet);
 }
