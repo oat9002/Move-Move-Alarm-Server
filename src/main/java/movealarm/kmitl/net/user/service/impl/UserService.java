@@ -102,21 +102,19 @@ public class UserService implements IUserService{
     @Override
     public HashMap<String, Object> save(User user) {
         if(user.getCreatedDate() == null) {
-            HashMap<String, Object> temp = modelCollection.create(this);
+            user.setCreatedDate(new Date());
+            User temp = userRepository.save(user);
             if(temp == null)
                 return StatusDescription.createProcessStatus(false, "Cannot save due to a database error.");
-            user.setId(Integer.parseInt("" + temp.get("id")));
-            user.setCreatedDate((Date) temp.get("created_date"));
             return StatusDescription.createProcessStatus(true);
         }
 
-        HashMap<String, Object> addScoreLogStatus = addScoreLogToDatabase(); //add score log to database
+        HashMap<String, Object> addScoreLogStatus = addScoreLogToDatabase(user); //add score log to database
         if(addScoreLogStatus != null) //if an error has occurred while adding score logs to the database
             return addScoreLogStatus; //break saving process and return error description
 
         user.setTemp_scoreLogList(null);
-        User
-        return StatusDescription.createProcessStatus(userRepository.save(user));
+        return StatusDescription.createProcessStatus((Boolean)update(user).get("status"));
     }
 
     @Override
@@ -132,11 +130,11 @@ public class UserService implements IUserService{
 
     @Override
     public HashMap<String, Object> addScoreLogToDatabase(User user) {
-        if(temp_scoreLogList.size() != 0) { //if temporary list is not empty
-            String[] valuesSet = new String[temp_scoreLogList.size()]; //create array to keep a set of values of each score log
+        if(user.getTemp_scoreLogList().size() != 0) { //if temporary list is not empty
+            String[] valuesSet = new String[user.getTemp_scoreLogList().size()]; //create array to keep a set of values of each score log
 
-            for(int i = 0; i < temp_scoreLogList.size(); i++) {
-                HashMap<String, Object> item = temp_scoreLogList.get(i);
+            for(int i = 0; i < user.getTemp_scoreLogList().size(); i++) {
+                HashMap<String, Object> item = user.getTemp_scoreLogList().get(i);
                 valuesSet[i] = "" + item.get("id") + ", " + item.get("currentScore") + ", " + item.get("modifiedScore") + ", '" + item.get("description") + "'"; //concat string
             }
 
