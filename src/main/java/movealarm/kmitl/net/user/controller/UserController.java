@@ -3,6 +3,7 @@ package movealarm.kmitl.net.user.controller;
 import movealarm.kmitl.net.common.*;
 import movealarm.kmitl.net.group.entity.Group;
 import movealarm.kmitl.net.user.entity.User;
+import movealarm.kmitl.net.user.service.IUserScoreService;
 import movealarm.kmitl.net.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IUserScoreService userScoreService;
     
     @RequestMapping("/user/findByID")
     public String findByID(@RequestParam(value="id", required = true, defaultValue = "0") int id)
@@ -30,7 +34,7 @@ public class UserController {
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Not found the required user."));
 
         HashMap<String, Object> JSON = StatusDescription.createProcessStatus(true);
-        JSON.put("user", user.getGeneralValues()); //put user's common values
+        JSON.put("user", userService.getGeneralValues(user)); //put user's common values
 
         return converter.HashMapToJSON(JSON);
     }
@@ -75,7 +79,7 @@ public class UserController {
 
         for(int i = startRank - 1; i < endRank; i++) { //put user data to the list at start rank to end rank
             HashMap<String, Object> item = rankList.get(i);
-            HashMap<String, Object> usersData = userService.find(converter.toInt(item.get("id"))).getGeneralValues();
+            HashMap<String, Object> usersData = userService.getGeneralValues(userService.find(converter.toInt(item.get("id"))));
             usersData.put("rank", startRank);
             userDataList.add(usersData);
             startRank++;
@@ -161,9 +165,9 @@ public class UserController {
             //do nothing
         }
 
-        HashMap<String, Object> response = user.save();
+        HashMap<String, Object> response = userService.save(user);
         if((boolean) response.get("status")) {
-            response.put("user", user.getGeneralValues());
+            response.put("user", userService.getGeneralValues(user));
             return converter.HashMapToJSON(response);
         }
 
@@ -197,7 +201,7 @@ public class UserController {
         catch (Exception e) {
             //do nothing
         }
-        return converter.HashMapToJSON(user.save());
+        return converter.HashMapToJSON(userService.save(user));
     }
 
     @RequestMapping("/user/delete")
@@ -236,9 +240,9 @@ public class UserController {
         if(user == null)
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist."));
 
-        HashMap<String, Object> processStatus = user.increaseScore(converter.toInt(data.get("score")), converter.toString(data.get("description"))); //increase score, put description of increasing and get process status
+        HashMap<String, Object> processStatus = userScoreService.increaseScore(user, converter.toInt(data.get("score")), converter.toString(data.get("description"))); //increase score, put description of increasing and get process status
         if((boolean) processStatus.get("status")) //if success
-            return converter.HashMapToJSON(user.save());
+            return converter.HashMapToJSON(userService.save(user));
 
         return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Cannot increase score."));
     }
@@ -253,9 +257,9 @@ public class UserController {
         if(user == null)
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist."));
 
-        HashMap<String, Object> processStatus = user.decreaseScore(converter.toInt(data.get("score")), converter.toString(data.get("description")));
+        HashMap<String, Object> processStatus = userScoreService.decreaseScore(user, converter.toInt(data.get("score")), converter.toString(data.get("description")));
         if((boolean) processStatus.get("status"))
-            return converter.HashMapToJSON(user.save());
+            return converter.HashMapToJSON(userService.save(user));
 
         return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Cannot decrease score due to internal server error."));
     }
@@ -270,9 +274,9 @@ public class UserController {
         if(user == null)
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "User does not exist."));
 
-        HashMap<String, Object> processStatus = user.decreaseScore(-user.getScore(), converter.toString(data.get("description")));
+        HashMap<String, Object> processStatus = userScoreService.decreaseScore(user, user.getScore(), converter.toString(data.get("description")));
         if((boolean) processStatus.get("status"))
-            return converter.HashMapToJSON(user.save());
+            return converter.HashMapToJSON(userService.save(user));
 
         return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "Cannot reset score due to internal server error."));
     }
@@ -292,7 +296,7 @@ public class UserController {
             user = new User();
             user.setFacebookID(facebookID);
             user.setFacebookFirstName(facebookFirstName);
-            JSON = user.save();
+            JSON = userService.save(user);
         }
 
         Group group = null;
@@ -306,7 +310,7 @@ public class UserController {
         if(group != null)
             JSON.put("group", group.getGeneralValues());
 
-        JSON.put("user",user.getGeneralValues());
+        JSON.put("user",userService.getGeneralValues(user));
 
         return converter.HashMapToJSON(JSON);
     }

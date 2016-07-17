@@ -2,7 +2,7 @@ package movealarm.kmitl.net.common;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import movealarm.kmitl.net.user.entity.User;
+import movealarm.kmitl.net.common.service.ICommonService;
 import movealarm.kmitl.net.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +23,8 @@ public class Converter {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private ICommonService commonService;
 
     private Converter() { //make constructor as private to implement the class with singleton design pattern
         gson = new Gson();
@@ -46,12 +48,12 @@ public class Converter {
         return gson.toJson(map); //convert HashMap to JSON
     }
 
-    public HashMap<String, Object>[] ModelArrayToHashMapArray(User[] models)
+    public HashMap<String, Object>[] ModelArrayToHashMapArray(Object[] models)
     {
         ArrayList<HashMap<String, Object>> mapList = new ArrayList<>();
 
         for(int i = 0; i < models.length; i++)
-            mapList.add(userService.getGeneralValues(models[i]));
+            mapList.add(commonService.getGeneralValues(models[i]));
 
         HashMap<String, Object>[] arrayOfMap = mapList.toArray((new HashMap[mapList.size()])); //convert ArrayList to normal array
 

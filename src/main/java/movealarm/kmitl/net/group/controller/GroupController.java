@@ -6,6 +6,8 @@ import movealarm.kmitl.net.common.DatabaseInterface;
 import movealarm.kmitl.net.common.SQLInquirer;
 import movealarm.kmitl.net.common.StatusDescription;
 import movealarm.kmitl.net.group.entity.Group;
+import movealarm.kmitl.net.user.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +21,9 @@ public class GroupController {
     Converter converter = Converter.getInstance();
     DatabaseInterface databaseInquirer = SQLInquirer.getInstance();
 
+    @Autowired
+    private IUserService userService;
+
     @RequestMapping("/group/createGroup")
     public String createGroup(@RequestParam(value = "JSON", required = true, defaultValue = "0")String JSON)
     {
@@ -30,7 +35,7 @@ public class GroupController {
         if(groupName_match.length > 0) //if this name is already used
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "This group name already exists.")); //send error description to client
 
-        User user = User.find(converter.toInt(userData.get("id")));
+        User user = userService.find(converter.toInt(userData.get("id")));
         if(user == null) //check if this user is exist
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "This user does not exist."));
 
@@ -174,7 +179,7 @@ public class GroupController {
         HashMap<String, Object> memberData = converter.JSONToHashMap(converter.toString(data.get("member"))); //convert nested JSON
 
         Group group = Group.find(converter.toInt(groupData.get("id"))); //find group
-        User user = User.find(converter.toInt(memberData.get("id"))); //find a user that will be removed from the group
+        User user = userService.find(converter.toInt(memberData.get("id"))); //find a user that will be removed from the group
 
         if(group == null) //if found nothing
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "This group does not exist."));
@@ -196,7 +201,7 @@ public class GroupController {
         HashMap<String, Object> memberData = converter.JSONToHashMap(converter.toString(data.get("member")));
 
         Group group = Group.find(converter.toInt(groupData.get("id"))); //find group by id
-        User user = User.find(converter.toInt(memberData.get("id"))); //find group by id
+        User user = userService.find(converter.toInt(memberData.get("id"))); //find group by id
 
         if(group == null) //if found nothing
             return converter.HashMapToJSON(StatusDescription.createProcessStatus(false, "This group does not exist."));
