@@ -4,10 +4,12 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
         classpath('io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE')
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
     }
 }
 
@@ -17,6 +19,12 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot' 
 apply plugin: 'io.spring.dependency-management' 
 apply plugin: 'application'
+
+apply plugin: 'propdeps'
+apply plugin: 'propdeps-maven'
+apply plugin: 'propdeps-idea'
+apply plugin: 'propdeps-eclipse'
+
 
 mainClassName = 'movealarm.kmitl.net.MoveAlarmServerApplication'
 
@@ -32,7 +40,6 @@ repositories {
     mavenCentral()
 }
 
-
 dependencies {
     //Spring
     compile('org.springframework.boot:spring-boot-starter-actuator')
@@ -41,11 +48,13 @@ dependencies {
     compile('org.springframework.session:spring-session')
     compile('org.springframework.boot:spring-boot-starter-web')
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    optional("org.springframework.boot:spring-boot-configuration-processor")
     //Gson
     compile('com.google.code.gson:gson:2.4')
     //Database
     compile('org.mariadb.jdbc:mariadb-java-client:1.4.4')
 
+    compileJava.dependsOn(processResources)
     testCompile('org.springframework.boot:spring-boot-starter-test') 
 }
 
